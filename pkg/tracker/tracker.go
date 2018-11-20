@@ -2,9 +2,12 @@ package tracker
 
 import (
 	"fmt"
+	"os/exec"
+
+	//"fmt"
 	"log"
 	"math/rand"
-	"os/exec"
+	//"os/exec"
 	"strconv"
 	"time"
 	"ypeckstadt/fabric-data-tracker/pkg/utl/wrapper"
@@ -45,7 +48,7 @@ func Start() error {
 	channelID := "channel1"
 	chaincodeID := "test-chaincode"
 	userName := "Admin"
-	characters := 5000
+	characters := 50000
 	savingTimes := 4
 	transactions := 365
 	inputDataLength := characters / savingTimes
@@ -66,6 +69,23 @@ func Start() error {
 	dataString := RandStringBytesMaskImprSrc(inputDataLength)
 
 
+
+	//// Invoke
+	//payload, err := wrapper.Invoke(channelID, userName, chaincodeID, "iCreateRandomData", []string{"1", dataString})
+	//if err != nil {
+	//	log.Printf(err.Error())
+	//}
+	//log.Println(string(payload))
+	//
+	//
+	//// Query
+	//payload, err = wrapper.Query(channelID,userName,chaincodeID,"qTestQuery", []string{strconv.Itoa(1)})
+	//if err != nil {
+	//	log.Printf(err.Error())
+	//}
+	//log.Println(string(payload))
+
+
 	ticker := time.NewTicker(time.Millisecond * 100)
 	counter := 0
 
@@ -75,7 +95,9 @@ func Start() error {
 			if counter == timesRun {
 				ticker.Stop()
 			}
-			go func() {
+			go func(counter int) {
+
+				// Invoke
 				payload, err := wrapper.Invoke(channelID, userName, chaincodeID, "iCreateRandomData", []string{strconv.Itoa(counter), dataString})
 				if counter % 10 == 0 && counter != 0 {
 					fmt.Println("Created another 10 data transactions")
@@ -84,6 +106,14 @@ func Start() error {
 					log.Printf(err.Error())
 				}
 				log.Println(string(payload))
+
+
+				//// Query
+				//payload, err = wrapper.Query(channelID,userName,chaincodeID,"qTestQuery", []string{strconv.Itoa(counter)})
+				//if err != nil {
+				//	log.Printf(err.Error())
+				//}
+				//log.Println(string(payload))
 
 				// check disk usage size for /var/lib/docker/volumes --> needs sudo access
 				//cmd := exec.Command("/bin/sh", "-c", "sudo find ...")
@@ -98,7 +128,7 @@ func Start() error {
 					log.Fatal(err)
 				}
 				fmt.Printf("The du is %s\n", out)
-			}()
+			}(counter)
 
 			// check du size and save
 			counter++
@@ -120,11 +150,11 @@ func Start() error {
 
 	////
 	//fmt.Println(string(payload))
-	payload, err := wrapper.Query(channelID, userName, chaincodeID, "qTestQuery", []string{"hello", "hello"})
-	if err != nil {
-		log.Printf(err.Error())
-	}
-	log.Println(string(payload))
+	//payload, err := wrapper.Query(channelID, userName, chaincodeID, "qTestQuery", []string{"hello", "hello"})
+	//if err != nil {
+	//	log.Printf(err.Error())
+	//}
+	//log.Println(string(payload))
 	//err = wrapper.EnrollUser("User1", "org1")
 	//fmt.Println(err)
 	//user, err := wrapper.GetEnrolledUser("User1", "org1")

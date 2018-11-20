@@ -87,27 +87,34 @@ func (t *TestChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 func (t *TestChaincode) query(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	fmt.Println("########### TestChaincode query ###########")
 
-	// Check whether the number of arguments is sufficient
-	if len(args) < 2 {
-		return shim.Error("The number of arguments is insufficient.")
+	//// Check whether the number of arguments is sufficient
+	//if len(args) < 2 {
+	//	return shim.Error("The number of arguments is insufficient.")
+	//}
+	//
+	//// Like the Invoke function, we manage multiple type of query requests with the second argument.
+	//// We also have only one possible argument: hello
+	//if args[1] == "hello" {
+	//
+	//	// Get the state of the value matching the key hello in the ledger
+	//	state, err := stub.GetState("hello")
+	//	if err != nil {
+	//		return shim.Error("Failed to get state of hello")
+	//	}
+	//
+	//	// Return this value in response
+	//	return shim.Success(state)
+	//}
+	//
+	//// If the arguments given don’t match any function, we return an error
+	//return shim.Error("Unknown query action, check the second argument.")
+
+	data, err := stub.GetState(args[0])
+	if err != nil {
+		return shim.Error(err.Error())
 	}
 
-	// Like the Invoke function, we manage multiple type of query requests with the second argument.
-	// We also have only one possible argument: hello
-	if args[1] == "hello" {
-
-		// Get the state of the value matching the key hello in the ledger
-		state, err := stub.GetState("hello")
-		if err != nil {
-			return shim.Error("Failed to get state of hello")
-		}
-
-		// Return this value in response
-		return shim.Success(state)
-	}
-
-	// If the arguments given don’t match any function, we return an error
-	return shim.Error("Unknown query action, check the second argument.")
+	return shim.Success(data)
 }
 
 // invoke
