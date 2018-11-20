@@ -5,6 +5,7 @@ import (
 	"log"
 	"math/rand"
 	"os/exec"
+	"strconv"
 	"time"
 	"ypeckstadt/fabric-data-tracker/pkg/utl/wrapper"
 )
@@ -75,7 +76,7 @@ func Start() error {
 				ticker.Stop()
 			}
 			go func() {
-				payload, err := wrapper.Invoke(channelID, userName, chaincodeID, "iCreateRandomData", []string{dataString})
+				payload, err := wrapper.Invoke(channelID, userName, chaincodeID, "iCreateRandomData", []string{strconv.Itoa(counter), dataString})
 				if counter % 10 == 0 && counter != 0 {
 					fmt.Println("Created another 10 data transactions")
 				}
