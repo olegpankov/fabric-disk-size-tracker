@@ -63,6 +63,7 @@ func (t *TestChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		// Invoke
 		case "iCreateUser": return t.createUser(stub, args)
 		case "qTestQuery" : return t.query(stub, args)
+		case "iCreateRandomData": return t.createData(stub, args)
 	}
 
 
