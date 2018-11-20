@@ -65,7 +65,7 @@ func Start() error {
 	dataString := RandStringBytesMaskImprSrc(inputDataLength)
 
 
-	ticker := time.NewTicker(time.Millisecond * 1000)
+	ticker := time.NewTicker(time.Millisecond * 100)
 	counter := 0
 
 	for {
@@ -87,6 +87,12 @@ func Start() error {
 				// check disk usage size for /var/lib/docker/volumes --> needs sudo access
 				//cmd := exec.Command("/bin/sh", "-c", "sudo find ...")
 				out, err := exec.Command("/bin/sh", "-c", "sudo du -s -m /var/lib/docker/volumes/peer0.org1.example.com").Output()
+				if err != nil {
+					log.Fatal(err)
+				}
+				fmt.Printf("The du is %s\n", out)
+
+				out, err = exec.Command("/bin/sh", "-c", "sudo du -s -m /var/lib/docker/volumes/couchdb-peer0").Output()
 				if err != nil {
 					log.Fatal(err)
 				}
