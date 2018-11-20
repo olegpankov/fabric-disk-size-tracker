@@ -1,7 +1,7 @@
-.PHONY: env-up env-down build-tracker run-tracker
+.PHONY: env-up env-down build-tracker run-tracker copy-fixtures
 
 ##### ENV
-env-up: env-down
+env-up: env-down copy-fixtures
 	@echo "Start environment ..."
 	@cd fixtures && docker-compose up -d --force-recreate --build
 	@sleep 5
@@ -21,6 +21,11 @@ build-tracker:
 	@echo "Build done"
 
 ##### RUN
-run-api: build-tracker
+run-tracker: build-tracker
 	@echo "Starting tracker ..."
 	@cd cmd/tracker && ./tracker
+
+##### COPY
+copy-fixtures:
+	@echo "Copying fixtures ..."
+	@cp -r fixtures /tmp

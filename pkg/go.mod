@@ -1,1 +1,1 @@
-module ypeckstadt/fabric-data-tracker/cmd/tracker
+module ypeckstadt/fabric-data-tracker/pkg
