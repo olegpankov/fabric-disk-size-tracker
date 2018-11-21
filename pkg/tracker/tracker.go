@@ -48,7 +48,7 @@ func Start() error {
 	channelID := "channel1"
 	chaincodeID := "test-chaincode"
 	userName := "Admin"
-	characters := 50000
+	characters := 500000
 	savingTimes := 4
 	transactions := 365
 	inputDataLength := characters / savingTimes
@@ -108,7 +108,7 @@ func Start() error {
 				log.Println(string(payload))
 
 
-				//// Query
+				// Query
 				//payload, err = wrapper.Query(channelID,userName,chaincodeID,"qTestQuery", []string{strconv.Itoa(counter)})
 				//if err != nil {
 				//	log.Printf(err.Error())
@@ -123,7 +123,7 @@ func Start() error {
 				}
 				fmt.Printf("The du is %s\n", out)
 
-				out, err = exec.Command("/bin/sh", "-c", "sudo du -s -m /var/lib/docker/volumes/couchdb-peer0").Output()
+				out, err = exec.Command("/bin/sh", "-c", "sudo du -s -m /var/lib/docker/volumes/couchdb.peer0.org1.example.com").Output()
 				if err != nil {
 					log.Fatal(err)
 				}
