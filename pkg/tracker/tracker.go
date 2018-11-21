@@ -53,10 +53,6 @@ func Start() error {
 	csvOutput := [][]string{}
 	csvOutput = append(csvOutput, []string{"transaction number", "peer size", "couchdb size"})
 
-	//var outputType int
-	//flag.IntVar(&outputType, "type", 0, "step for input data")
-	//flag.Parse()
-
 	//wrapper.CreateChannel(channelID, channelConfig, ordererID)
 	//wrapper.JoinChannel(channelID,ordererID)
 	//pkg,_ := wrapper.CreateChaincodePackage(chaincodePath, chaincodeGoPath)
@@ -71,21 +67,6 @@ func Start() error {
 
 	dataString := RandStringBytesMaskImprSrc(inputDataLength)
 
-	//// Invoke
-	//payload, err := wrapper.Invoke(channelID, userName, chaincodeID, "iCreateRandomData", []string{"1", dataString})
-	//if err != nil {
-	//	log.Printf(err.Error())
-	//}
-	//log.Println(string(payload))
-	//
-	//
-	//// Query
-	//payload, err = wrapper.Query(channelID,userName,chaincodeID,"qTestQuery", []string{strconv.Itoa(1)})
-	//if err != nil {
-	//	log.Printf(err.Error())
-	//}
-	//log.Println(string(payload))
-
 	ticker := time.NewTicker(time.Millisecond * 100)
 	counter := 0
 
@@ -95,41 +76,26 @@ func Start() error {
 			if counter == timesRun {
 				ticker.Stop()
 			}
-			go func(counter int) {
 
-				// Invoke
-				payload, err := wrapper.Invoke(channelID, userName, chaincodeID, "iCreateRandomData", []string{strconv.Itoa(counter), dataString})
-				log.Println(string(payload))
+			// Invoke
+			payload, err := wrapper.Invoke(channelID, userName, chaincodeID, "iCreateRandomData", []string{strconv.Itoa(counter), dataString})
+			log.Println(string(payload))
 
-				// check disk usage size for /var/lib/docker/volumes --> needs sudo access
-				//cmd := exec.Command("/bin/sh", "-c", "sudo find ...")
-				peerOutPut, err := exec.Command("/bin/sh", "-c", "sudo du -sh /var/lib/docker/volumes/peer0.org1.example.com").Output()
-				if err != nil {
-					log.Fatal(err)
-				}
-				fmt.Printf("The du is %s\n", peerOutPut)
+			// check disk usage size for /var/lib/docker/volumes --> needs sudo access
+			//cmd := exec.Command("/bin/sh", "-c", "sudo find ...")
+			peerOutPut, err := exec.Command("/bin/sh", "-c", "sudo du -sh /var/lib/docker/volumes/peer0.org1.example.com").Output()
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Printf("The du is %s\n", peerOutPut)
 
-				dbOutPut, err := exec.Command("/bin/sh", "-c", "sudo du -sh /var/lib/docker/volumes/couchdb.peer0.org1.example.com").Output()
-				if err != nil {
-					log.Fatal(err)
-				}
-				fmt.Printf("The du is %s\n", dbOutPut)
+			dbOutPut, err := exec.Command("/bin/sh", "-c", "sudo du -sh /var/lib/docker/volumes/couchdb.peer0.org1.example.com").Output()
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Printf("The du is %s\n", dbOutPut)
 
-				//if outputType == 100 {
-				//	if counter % 100 == 0 {
-				//		csvOutput = append(csvOutput, []string{strconv.Itoa(counter) ,string(peerOutPut), string(dbOutPut)})
-				//	}
-				//} else if outputType == 10 {
-				//	if counter % 10 == 0  {
-				//		csvOutput = append(csvOutput, []string{strconv.Itoa(counter) ,string(peerOutPut), string(dbOutPut)})
-				//	}
-				//} else {
-				//	csvOutput = append(csvOutput, []string{strconv.Itoa(counter) ,string(peerOutPut), string(dbOutPut)})
-				//}
-
-				csvOutput = append(csvOutput, []string{strconv.Itoa(counter), string(peerOutPut), string(dbOutPut)})
-
-			}(counter)
+			csvOutput = append(csvOutput, []string{strconv.Itoa(counter), string(peerOutPut), string(dbOutPut)})
 
 			// check du size and save
 			if err := csvExport(csvOutput); err != nil {
