@@ -207,3 +207,12 @@ services:
     - peer0.org1.example.com
     - peer1.org1.example.com
 
+  couchdb-cleaner:
+    container_name:  couchdb-cleaner
+    image:  aneb/couchdb-cleaner:1.0
+    environment:
+      COUCHDB_CLEANER_URLS: http://couchdb:5984
+      COUCHDB_CLEANER_COMPACT_INTERVAL_MS: 5000
+    depends_on:
+      - couchdb.peer0.org1.example.com
+
